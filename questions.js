@@ -1,0 +1,10 @@
+let questions = [
+  {q:"At Walton Bridge, how many arches?", options:["2","3","4","5"], answer:1},
+  {q:"Which comic actor lived here in 1930s?", options:["Chaplin","Stan Laurel","Attenborough","Caine"], answer:1},
+  {bonus:true, text:"🎄 Bonus Challenge 🎄\nFind a stranger and sing a Christmas carol together.\nUpload a video for +2 points."},
+  {q:"Walton railway station sign lists which nearby town?", options:["Weybridge","Esher","Kingston","Guildford"], answer:0},
+  {bonus:true, text:"🎅 Bonus Challenge 🎅\nTake a silly team selfie in front of Walton Bridge.\nUpload for +2 points."},
+  {q:"Walton Bridge has been rebuilt how many times?", options:["2","4","6","8"], answer:2},
+  {bonus:true, text:"🔍 Bonus Challenge 🔍\nFind the word 'Walton' in a shop sign.\nSnap a photo for +2 points."},
+  // Continue adding until you reach 15 questions
+];
