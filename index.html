@@ -40,85 +40,89 @@
 
 <script src="questions.js?v=2"></script>
 <script>
-let current = 0, score = 0, team = "";
-let timer = 300; // 5 minutes
+window.onload = function() {
 
-function checkAnagram(){
-  let ans = document.getElementById("anagram").value.toLowerCase();
-  if(ans.includes("walton-on-thames")){
-    document.getElementById("intro").classList.add("hidden");
-    document.getElementById("team").classList.remove("hidden");
-  } else { alert("Try again!"); }
-}
+  let current = 0, score = 0, team = "";
+  let timer = 300; // 5 minutes
 
-function startQuiz(){
-  team = document.getElementById("teamName").value;
-  document.getElementById("team").classList.add("hidden");
-  document.getElementById("quiz").classList.remove("hidden");
-  showQuestion();
-  setInterval(()=>{ 
-    if(timer>0){ timer--; document.getElementById("time").innerText=timer; }
-    else { endQuiz(); }
-  },1000);
-}
+  function checkAnagram(){
+    let ans = document.getElementById("anagram").value.toLowerCase();
+    if(ans.includes("walton-on-thames")){
+      document.getElementById("intro").classList.add("hidden");
+      document.getElementById("team").classList.remove("hidden");
+    } else { alert("Try again!"); }
+  }
 
-function showQuestion(){
-  if(current>=questions.length){ endQuiz(); return; }
-  let q = questions[current];
-  if(q.bonus){
-    document.getElementById("questionBox").innerHTML = 
-      `<div class='question'><h3>${q.text}</h3>
-       <button onclick='completeBonus()'>Mark as Complete (+2)</button>
-       <button onclick='skipBonus()'>Skip</button></div>`;
-  } else {
+  function startQuiz(){
+    team = document.getElementById("teamName").value;
+    document.getElementById("team").classList.add("hidden");
+    document.getElementById("quiz").classList.remove("hidden");
+    showQuestion();
+    setInterval(()=>{ 
+      if(timer>0){ 
+        timer--; 
+        document.getElementById("time").innerText = timer; 
+      }
+      else { endQuiz(); }
+    },1000);
+  }
+
+  function showQuestion(){
+    if(current >= questions.length){ 
+      endQuiz(); 
+      return; 
+    }
+
+    let q = questions[current];
+
     let html = `<div class='question'><h3>${q.q}</h3>`;
     q.options.forEach((opt,i)=>{
       html += `<button onclick='answer(${i})'>${opt}</button><br>`;
     });
     html += `</div>`;
+
     document.getElementById("questionBox").innerHTML = html;
   }
-}
 
-function answer(i){
-  if(i===questions[current].answer){ score++; }
-  current++;
-  showQuestion();
-}
+  function answer(i){
+    if(i === questions[current].answer){ 
+      score++; 
+    }
+    current++;
+    showQuestion();
+  }
 
-function completeBonus(){
-  score += 2;
-  current++;
-  showQuestion();
-}
+  function endQuiz(){
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("results").classList.remove("hidden");
+    document.getElementById("score").innerText = 
+      `Team: ${team} | Score: ${score}`;
+  }
 
-function skipBonus(){
-  current++;
-  showQuestion();
-}
+  function saveScore(){
+    let board = JSON.parse(localStorage.getItem("ripleyBoard") || "[]");
+    board.push({team:team, score:score});
+    localStorage.setItem("ripleyBoard", JSON.stringify(board));
+    alert("Score saved!");
+  }
 
-function endQuiz(){
-  document.getElementById("quiz").classList.add("hidden");
-  document.getElementById("results").classList.remove("hidden");
-  document.getElementById("score").innerText = 
-    `Team: ${team} | Score: ${score}`;
-}
+  function showLeaderboard(){
+    document.getElementById("results").classList.add("hidden");
+    document.getElementById("leaderboard").classList.remove("hidden");
+    let board = JSON.parse(localStorage.getItem("ripleyBoard") || "[]");
+    board.sort((a,b)=>b.score - a.score);
+    document.getElementById("board").innerHTML = board
+      .map(e => `<li>${e.team}: ${e.score}</li>`)
+      .join("");
+  }
 
-function saveScore(){
-  let board = JSON.parse(localStorage.getItem("ripleyBoard")||"[]");
-  board.push({team:team,score:score});
-  localStorage.setItem("ripleyBoard",JSON.stringify(board));
-  alert("Score saved!");
-}
+  // Expose functions to HTML buttons
+  window.checkAnagram = checkAnagram;
+  window.startQuiz = startQuiz;
+  window.saveScore = saveScore;
+  window.showLeaderboard = showLeaderboard;
 
-function showLeaderboard(){
-  document.getElementById("results").classList.add("hidden");
-  document.getElementById("leaderboard").classList.remove("hidden");
-  let board = JSON.parse(localStorage.getItem("ripleyBoard")||"[]");
-  board.sort((a,b)=>b.score-a.score);
-  document.getElementById("board").innerHTML = board.map(
-    e=>`<li>${e.team}: ${e.score}</li>`).join("");
-}
+}; // END window.onload
 </script>
 
 </body>
