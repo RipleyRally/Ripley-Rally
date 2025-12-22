@@ -1,10 +1,70 @@
-let questions = [
-  {q:"At Walton Bridge, how many arches?", options:["2","3","4","5"], answer:1},
-  {q:"Which comic actor lived here in 1930s?", options:["Chaplin","Stan Laurel","Attenborough","Caine"], answer:1},
-  {bonus:true, text:"🎄 Bonus Challenge 🎄\nFind a stranger and sing a Christmas carol together.\nUpload a video for +2 points."},
-  {q:"Walton railway station sign lists which nearby town?", options:["Weybridge","Esher","Kingston","Guildford"], answer:0},
-  {bonus:true, text:"🎅 Bonus Challenge 🎅\nTake a silly team selfie in front of Walton Bridge.\nUpload for +2 points."},
-  {q:"Walton Bridge has been rebuilt how many times?", options:["2","4","6","8"], answer:2},
-  {bonus:true, text:"🔍 Bonus Challenge 🔍\nFind the word 'Walton' in a shop sign.\nSnap a photo for +2 points."},
-  // Continue adding until you reach 15 questions
+// ===============================
+//   RIPLEY RALLY – QUESTION SET
+//   Short‑answer format
+// ===============================
+
+const questions = [
+    {
+        question: "15554? Where am I?",
+        answer: "Drewitt’s court ground floor car park"
+    },
+    {
+        question: "Opening hours of the multi‑storey car park?",
+        answer: "24"
+    },
+    {
+        question: "Find the red cross with the upside‑down crucifix in the top left corner. What is written underneath?",
+        answer: "4 & 25 vice. Cap 42"
+    },
+    {
+        question: "“Anzac Way” is in memory of WW1 soldiers. What hospital did they pass through?",
+        answer: "Mount Felix"
+    },
+    {
+        question: "PAM is next to the viaduct. But where is that?",
+        answer: "On the ground"
+    },
+    {
+        question: "Where can you get a “TING DENE” welcome?",
+        answer: "Walton Marina"
+    },
+    {
+        question: "If the beacon is flashing, what must you do?",
+        answer: "Phone the council"
+    },
+    {
+        question: "“Keep Away”. But why?",
+        answer: "Oak Processionary moth"
+    },
+    {
+        question: "The Little Bears Club. What’s their number?",
+        answer: "07769863652"
+    },
+    {
+        question: "There they are, standing like 3‑foot vicars. How many?",
+        answer: "25"
+    },
+    {
+        question: "If “Just Cuts” is 26, what’s “Claire’s”?",
+        answer: "32"
+    },
+    {
+        question: "That’s a big cutthroat razor. Whose is it?",
+        answer: "Reb’s Razors"
+    },
+    {
+        question: "It’s below Dylon, but above Sistema?",
+        answer: "3M"
+    },
+    {
+        question: "It’s a Victorian thriller, in January, at The Barn. What is it called?",
+        answer: "Gaslight"
+    },
+    {
+        question: "Who does Shepherd and Neame?",
+        answer: "The George"
+    }
 ];
+
+// Export for use in the quiz engine
+export default questions;
