@@ -1,4 +1,3 @@
-
 // ===============================
 //   RIPLEY RALLY – QUESTION SET
 //   Short-answer format
@@ -65,5 +64,3 @@ const questions = [
         question: "Who does Shepherd and Neame?",
         answer: "The George"
     }
-];
-];
