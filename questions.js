@@ -29,7 +29,7 @@ const questions = [
         answer: "Walton Marina"
     },
     {
-        question: "If the beacon is flashing, what must you do?"    
+        question: "If the beacon is flashing, what must you do?",
         answer: "Phone the council"
     },
     {
