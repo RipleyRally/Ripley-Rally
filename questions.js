@@ -66,3 +66,4 @@ const questions = [
         answer: "The George"
     }
 ];
+];
