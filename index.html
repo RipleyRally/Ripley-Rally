@@ -6,8 +6,13 @@
 </head>
 <body>
 
+<!-- SNOWFALL LAYER -->
+<div id="snowfall"></div>
+
+<!-- COUNTDOWN -->
 <div id="rallyCountdown" class="countdown"></div>
 
+<!-- INTRO -->
 <div id="intro">
   <h1>🎉 Welcome to the Ripley Rally 🎉</h1>
   <p>Unscramble this anagram to reveal today’s destination:</p>
@@ -16,6 +21,7 @@
   <button onclick="checkAnagram()">Submit</button>
 </div>
 
+<!-- TEAM NAME -->
 <div id="team" class="hidden">
   <h2>Destination unlocked: Walton-on-Thames!</h2>
   <p>Enter your team name:</p>
@@ -23,11 +29,13 @@
   <button onclick="startQuiz()">Start Quiz</button>
 </div>
 
+<!-- QUIZ -->
 <div id="quiz" class="hidden">
   <div class="timer">Time left: <span id="time">300</span> seconds</div>
   <div id="questionBox"></div>
 </div>
 
+<!-- RESULTS -->
 <div id="results" class="hidden">
   <h2>🎉 Quiz Complete! 🎉</h2>
   <p id="score"></p>
@@ -35,6 +43,7 @@
   <button onclick="showLeaderboard()">View Leaderboard</button>
 </div>
 
+<!-- LEADERBOARD -->
 <div id="leaderboard" class="hidden">
   <h2>🏆 Leaderboard 🏆</h2>
   <ul id="board"></ul>
@@ -48,16 +57,44 @@
 <audio id="leaderboardMusic" src="leaderboard.mp3"></audio>
 <audio id="deadlineMusic" src="deadline.mp3"></audio>
 
-<script src="questions.js?v=2"></script>
+<script src="questions.js?v=3"></script>
+
 <script>
 window.onload = function() {
 
-  // ===== RALLY COUNTDOWN TO 25 DEC 12:00 =====
+  // ============================
+  // SNOWFALL EFFECT
+  // ============================
+  function startSnowfall() {
+    const container = document.getElementById("snowfall");
+
+    function createFlake() {
+      const flake = document.createElement("div");
+      flake.classList.add("snowflake");
+      flake.innerHTML = "❄";
+
+      flake.style.left = Math.random() * 100 + "vw";
+      flake.style.fontSize = (Math.random() * 10 + 10) + "px";
+      flake.style.animationDuration = (Math.random() * 5 + 5) + "s";
+
+      container.appendChild(flake);
+      setTimeout(() => flake.remove(), 10000);
+    }
+
+    setInterval(createFlake, 200);
+  }
+
+  startSnowfall();
+
+
+  // ============================
+  // COUNTDOWN TO 25 DEC 12:00
+  // ============================
   function startRallyCountdown() {
     const target = new Date();
-    target.setMonth(11);      // December
-    target.setDate(25);       // 25th
-    target.setHours(12);      // 12:00 midday
+    target.setMonth(11);
+    target.setDate(25);
+    target.setHours(12);
     target.setMinutes(0);
     target.setSeconds(0);
     target.setMilliseconds(0);
@@ -89,12 +126,18 @@ window.onload = function() {
     alert("🎄 The Rally Deadline Has Arrived — Welcome Home!");
   }
 
-  // ===== QUIZ STATE =====
+
+  // ============================
+  // QUIZ STATE
+  // ============================
   let current = 0, score = 0, team = "";
   let timer = 300;
   let quizInterval = null;
 
-  // ===== AUDIO HELPERS =====
+
+  // ============================
+  // AUDIO HELPERS
+  // ============================
   function play(id) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -107,7 +150,10 @@ window.onload = function() {
     try { el.pause(); } catch(e) {}
   }
 
-  // ===== CORE FLOW =====
+
+  // ============================
+  // CORE FLOW
+  // ============================
   function checkAnagram(){
     let ans = document.getElementById("anagram").value.toLowerCase();
     if(ans.includes("walton-on-thames")){
@@ -159,6 +205,19 @@ window.onload = function() {
 
     let q = questions[current];
 
+    // BONUS QUESTION
+    if (q.bonus) {
+      document.getElementById("questionBox").innerHTML = `
+        <div class='question'>
+          <h3>${q.text}</h3>
+          <button onclick='completeBonus()'>Mark Complete (+2)</button><br>
+          <button onclick='skipBonus()'>Skip</button>
+        </div>
+      `;
+      return;
+    }
+
+    // NORMAL QUESTION
     let html = `<div class='question'><h3>${q.q}</h3>`;
     q.options.forEach((opt,i)=>{
       html += `<button onclick='answer(${i})'>${opt}</button><br>`;
@@ -172,6 +231,17 @@ window.onload = function() {
     if(i === questions[current].answer){ 
       score++; 
     }
+    current++;
+    showQuestion();
+  }
+
+  function completeBonus(){
+    score += 2;
+    current++;
+    showQuestion();
+  }
+
+  function skipBonus(){
     current++;
     showQuestion();
   }
@@ -208,7 +278,10 @@ window.onload = function() {
       .join("");
   }
 
-  // ===== EMAIL LEADERBOARD =====
+
+  // ============================
+  // EMAIL LEADERBOARD
+  // ============================
   function emailLeaderboard() {
     let board = JSON.parse(localStorage.getItem("ripleyBoard") || "[]");
     board.sort((a,b)=>b.score - a.score);
@@ -216,26 +289,4 @@ window.onload = function() {
     let body = board.map(e => `${e.team}: ${e.score}`).join("%0D%0A");
 
     window.location.href =
-      `mailto:YOUR_EMAIL_HERE?subject=Ripley Rally Leaderboard&body=${body}`;
-  }
-
-  // ===== EXPOSE FUNCTIONS GLOBALLY (IMPORTANT!) =====
-  window.checkAnagram = checkAnagram;
-  window.startQuiz = startQuiz;
-  window.saveScore = saveScore;
-  window.showLeaderboard = showLeaderboard;
-  window.emailLeaderboard = emailLeaderboard;
-
-  // These three were missing — now fixed:
-  window.answer = answer;
-  window.showQuestion = showQuestion;
-  window.endQuiz = endQuiz;
-
-  // Start countdown
-  startRallyCountdown();
-
-}; // END window.onload
-</script>
-
-</body>
-</html>
+      `mailto:YOUR_EMAIL_HERE
