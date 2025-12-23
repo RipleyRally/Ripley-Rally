@@ -6,6 +6,8 @@
 </head>
 <body>
 
+<div id="rallyCountdown" class="countdown"></div>
+
 <div id="intro">
   <h1>🎉 Welcome to the Ripley Rally 🎉</h1>
   <p>Unscramble this anagram to reveal today’s destination:</p>
@@ -36,34 +38,116 @@
 <div id="leaderboard" class="hidden">
   <h2>🏆 Leaderboard 🏆</h2>
   <ul id="board"></ul>
+  <button onclick="emailLeaderboard()">Email Leaderboard to Organiser</button>
 </div>
+
+<!-- AUDIO FILES -->
+<audio id="startMusic" src="start.mp3"></audio>
+<audio id="quizMusic" src="quiz.mp3" loop></audio>
+<audio id="finaleMusic" src="finale.mp3"></audio>
+<audio id="leaderboardMusic" src="leaderboard.mp3"></audio>
+<audio id="deadlineMusic" src="deadline.mp3"></audio>
 
 <script src="questions.js?v=2"></script>
 <script>
 window.onload = function() {
 
-  let current = 0, score = 0, team = "";
-  let timer = 300; // 5 minutes
+  // ===== RALLY COUNTDOWN TO 25 DEC 12:00 =====
+  function startRallyCountdown() {
+    const target = new Date();
+    target.setMonth(11);      // December
+    target.setDate(25);       // 25th
+    target.setHours(12);      // 12:00 midday
+    target.setMinutes(0);
+    target.setSeconds(0);
+    target.setMilliseconds(0);
 
+    function updateCountdown() {
+      const now = new Date();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        document.getElementById("rallyCountdown").innerText = "🎄 Deadline reached!";
+        rallyDeadlineReached();
+        return;
+      }
+
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById("rallyCountdown").innerText =
+        `⏳ Time until deadline: ${hours}h ${mins}m ${secs}s`;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  }
+
+  function rallyDeadlineReached() {
+    try { document.getElementById("deadlineMusic").play(); } catch(e) {}
+    alert("🎄 The Rally Deadline Has Arrived — Welcome Home!");
+  }
+
+  // ===== QUIZ STATE =====
+  let current = 0, score = 0, team = "";
+  let timer = 300;
+  let quizInterval = null;
+
+  // ===== AUDIO HELPERS =====
+  function play(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    try { el.currentTime = 0; el.play(); } catch(e) {}
+  }
+
+  function pause(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    try { el.pause(); } catch(e) {}
+  }
+
+  // ===== CORE FLOW =====
   function checkAnagram(){
     let ans = document.getElementById("anagram").value.toLowerCase();
     if(ans.includes("walton-on-thames")){
       document.getElementById("intro").classList.add("hidden");
       document.getElementById("team").classList.remove("hidden");
-    } else { alert("Try again!"); }
+      play("startMusic");
+    } else { 
+      alert("Try again!"); 
+    }
   }
 
   function startQuiz(){
     team = document.getElementById("teamName").value;
+    if(!team){
+      alert("Please enter a team name!");
+      return;
+    }
+
     document.getElementById("team").classList.add("hidden");
     document.getElementById("quiz").classList.remove("hidden");
+
+    pause("leaderboardMusic");
+    pause("finaleMusic");
+    play("quizMusic");
+
     showQuestion();
-    setInterval(()=>{ 
-      if(timer>0){ 
+
+    timer = 300;
+    document.getElementById("time").innerText = timer;
+
+    if (quizInterval) clearInterval(quizInterval);
+    quizInterval = setInterval(()=>{ 
+      if(timer > 0){ 
         timer--; 
         document.getElementById("time").innerText = timer; 
       }
-      else { endQuiz(); }
+      else { 
+        clearInterval(quizInterval);
+        endQuiz(); 
+      }
     },1000);
   }
 
@@ -93,6 +177,11 @@ window.onload = function() {
   }
 
   function endQuiz(){
+    pause("quizMusic");
+    play("finaleMusic");
+
+    if (quizInterval) clearInterval(quizInterval);
+
     document.getElementById("quiz").classList.add("hidden");
     document.getElementById("results").classList.remove("hidden");
     document.getElementById("score").innerText = 
@@ -107,6 +196,9 @@ window.onload = function() {
   }
 
   function showLeaderboard(){
+    pause("finaleMusic");
+    play("leaderboardMusic");
+
     document.getElementById("results").classList.add("hidden");
     document.getElementById("leaderboard").classList.remove("hidden");
     let board = JSON.parse(localStorage.getItem("ripleyBoard") || "[]");
@@ -116,11 +208,31 @@ window.onload = function() {
       .join("");
   }
 
-  // Expose functions to HTML buttons
+  // ===== EMAIL LEADERBOARD =====
+  function emailLeaderboard() {
+    let board = JSON.parse(localStorage.getItem("ripleyBoard") || "[]");
+    board.sort((a,b)=>b.score - a.score);
+
+    let body = board.map(e => `${e.team}: ${e.score}`).join("%0D%0A");
+
+    window.location.href =
+      `mailto:YOUR_EMAIL_HERE?subject=Ripley Rally Leaderboard&body=${body}`;
+  }
+
+  // ===== EXPOSE FUNCTIONS GLOBALLY (IMPORTANT!) =====
   window.checkAnagram = checkAnagram;
   window.startQuiz = startQuiz;
   window.saveScore = saveScore;
   window.showLeaderboard = showLeaderboard;
+  window.emailLeaderboard = emailLeaderboard;
+
+  // These three were missing — now fixed:
+  window.answer = answer;
+  window.showQuestion = showQuestion;
+  window.endQuiz = endQuiz;
+
+  // Start countdown
+  startRallyCountdown();
 
 }; // END window.onload
 </script>
