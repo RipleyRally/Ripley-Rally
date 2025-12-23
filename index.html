@@ -289,4 +289,30 @@ window.onload = function() {
     let body = board.map(e => `${e.team}: ${e.score}`).join("%0D%0A");
 
     window.location.href =
-      `mailto:YOUR_EMAIL_HERE
+      `mailto:rob1ripley@me.com?subject=Ripley Rally Leaderboard&body=${body}`;
+  }
+
+
+  // ============================
+  // EXPOSE FUNCTIONS GLOBALLY
+  // ============================
+  window.checkAnagram = checkAnagram;
+  window.startQuiz = startQuiz;
+  window.saveScore = saveScore;
+  window.showLeaderboard = showLeaderboard;
+  window.emailLeaderboard = emailLeaderboard;
+
+  window.answer = answer;
+  window.showQuestion = showQuestion;
+  window.endQuiz = endQuiz;
+  window.completeBonus = completeBonus;
+  window.skipBonus = skipBonus;
+
+  // Start countdown
+  startRallyCountdown();
+
+}; // END window.onload
+</script>
+
+</body>
+</html>
