@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Ripley Rally Quiz</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
 
@@ -17,6 +17,11 @@
   <h1>🎉 Welcome to the Ripley Rally 🎉</h1>
   <p>Unscramble this anagram to reveal today’s destination:</p>
   <p><b>WALTON ON THEM SA</b></p>
+
+  <!-- 🔊 SOUND TEST BUTTON -->
+  <button onclick="testSound()">🔊 Test Sound</button>
+  <br><br>
+
   <input id="anagram" placeholder="Enter destination">
   <button onclick="checkAnagram()">Submit</button>
 </div>
@@ -148,6 +153,14 @@ window.onload = function() {
     const el = document.getElementById(id);
     if (!el) return;
     try { el.pause(); } catch(e) {}
+  }
+
+
+  // ============================
+  // 🔊 SOUND TEST
+  // ============================
+  function testSound() {
+    play("startMusic");
   }
 
 
@@ -289,7 +302,7 @@ window.onload = function() {
     let body = board.map(e => `${e.team}: ${e.score}`).join("%0D%0A");
 
     window.location.href =
-      `mailto:rob1ripley@me.com?subject=Ripley Rally Leaderboard&body=${body}`;
+      `mailto:YOUR_EMAIL_HERE?subject=Ripley Rally Leaderboard&body=${body}`;
   }
 
 
@@ -307,6 +320,8 @@ window.onload = function() {
   window.endQuiz = endQuiz;
   window.completeBonus = completeBonus;
   window.skipBonus = skipBonus;
+
+  window.testSound = testSound;
 
   // Start countdown
   startRallyCountdown();
