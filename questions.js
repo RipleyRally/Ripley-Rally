@@ -34,6 +34,13 @@ const questions = [
     options: ["On the ground", "On a wall", "On a lamppost", "On a bench"],
     answer: 0
   },
+
+  // ⭐ BONUS MISSION #1 — inserted after Q5
+  {
+    bonus: true,
+    text: "🎶 BONUS CHALLENGE: Sing a Christmas carol with a stranger and take a photo together! (+2 points)"
+  },
+
   {
     q: "Where can you get a \"TING DENE\" welcome?",
     options: ["Walton Marina", "The Heart", "Riverhouse Barn", "Elm Grove"],
@@ -69,6 +76,13 @@ const questions = [
     ],
     answer: 0
   },
+
+  // ⭐ BONUS MISSION #2 — inserted after Q10
+  {
+    bonus: true,
+    text: "🛍️ BONUS CHALLENGE: Take a festive photo in front of a Walton shop window! (+2 points)"
+  },
+
   {
     q: "There they are, standing like 3‑foot vicars. How many?",
     options: ["12", "18", "25", "30"],
