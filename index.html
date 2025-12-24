@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Ripley Rally Quiz</title>
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
 
@@ -36,7 +36,6 @@
 
 <!-- QUIZ -->
 <div id="quiz" class="hidden">
-  <div class="timer">Time left: <span id="time">300</span> seconds</div>
   <div id="questionBox"></div>
 </div>
 
@@ -62,7 +61,7 @@
 <audio id="leaderboardMusic" src="leaderboard.mp3"></audio>
 <audio id="deadlineMusic" src="deadline.mp3"></audio>
 
-<script src="questions.js?v=3"></script>
+<script src="questions.js?v=4"></script>
 
 <script>
 window.onload = function() {
@@ -128,7 +127,7 @@ window.onload = function() {
 
   function rallyDeadlineReached() {
     try { document.getElementById("deadlineMusic").play(); } catch(e) {}
-    alert("🎄 The Rally Deadline Has Arrived — Welcome Home!");
+    console.log("🎄 Deadline reached — music played, quiz continues.");
   }
 
 
@@ -136,8 +135,6 @@ window.onload = function() {
   // QUIZ STATE
   // ============================
   let current = 0, score = 0, team = "";
-  let timer = 300;
-  let quizInterval = null;
 
 
   // ============================
@@ -193,21 +190,6 @@ window.onload = function() {
     play("quizMusic");
 
     showQuestion();
-
-    timer = 300;
-    document.getElementById("time").innerText = timer;
-
-    if (quizInterval) clearInterval(quizInterval);
-    quizInterval = setInterval(()=>{ 
-      if(timer > 0){ 
-        timer--; 
-        document.getElementById("time").innerText = timer; 
-      }
-      else { 
-        clearInterval(quizInterval);
-        endQuiz(); 
-      }
-    },1000);
   }
 
   function showQuestion(){
@@ -262,8 +244,6 @@ window.onload = function() {
   function endQuiz(){
     pause("quizMusic");
     play("finaleMusic");
-
-    if (quizInterval) clearInterval(quizInterval);
 
     document.getElementById("quiz").classList.add("hidden");
     document.getElementById("results").classList.remove("hidden");
