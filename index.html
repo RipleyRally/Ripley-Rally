@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Ripley Rally Quiz</title>
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 
@@ -61,7 +61,7 @@
 <audio id="leaderboardMusic" src="leaderboard.mp3"></audio>
 <audio id="deadlineMusic" src="deadline.mp3"></audio>
 
-<script src="questions.js?v=4"></script>
+<script src="questions.js?v=5"></script>
 
 <script>
 window.onload = function() {
@@ -92,13 +92,13 @@ window.onload = function() {
 
 
   // ============================
-  // COUNTDOWN TO 25 DEC 12:00
+  // COUNTDOWN TO 26 DEC 12:00 (BOXING DAY)
   // ============================
   function startRallyCountdown() {
     const target = new Date();
-    target.setMonth(11);
-    target.setDate(26);
-    target.setHours(12);
+    target.setMonth(11);     // December
+    target.setDate(26);      // BOXING DAY
+    target.setHours(12);     // 12:00 midday
     target.setMinutes(0);
     target.setSeconds(0);
     target.setMilliseconds(0);
@@ -127,7 +127,7 @@ window.onload = function() {
 
   function rallyDeadlineReached() {
     try { document.getElementById("deadlineMusic").play(); } catch(e) {}
-    console.log("🎄 Deadline reached — music played, quiz continues.");
+    console.log("🎄 Boxing Day deadline reached — music played, quiz continues.");
   }
 
 
@@ -282,7 +282,7 @@ window.onload = function() {
     let body = board.map(e => `${e.team}: ${e.score}`).join("%0D%0A");
 
     window.location.href =
-      `mailto:YOUR_EMAIL_HERE?subject=Ripley Rally Leaderboard&body=${body}`;
+      `mailto:rob1ripley@me.comsubject=Ripley Rally Leaderboard&body=${body}`;
   }
 
 
