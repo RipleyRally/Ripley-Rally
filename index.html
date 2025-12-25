@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Ripley Rally Quiz</title>
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
@@ -51,7 +51,9 @@
 <div id="leaderboard" class="hidden">
   <h2>🏆 Leaderboard 🏆</h2>
   <ul id="board"></ul>
+
   <button onclick="emailLeaderboard()">Email Leaderboard to Organiser</button>
+  <button onclick="clearLeaderboard()">Clear Leaderboard</button>
 </div>
 
 <!-- AUDIO FILES -->
@@ -61,7 +63,7 @@
 <audio id="leaderboardMusic" src="leaderboard.mp3"></audio>
 <audio id="deadlineMusic" src="deadline.mp3"></audio>
 
-<script src="questions.js?v=5"></script>
+<script src="questions.js?v=6"></script>
 
 <script>
 window.onload = function() {
@@ -273,6 +275,18 @@ window.onload = function() {
 
 
   // ============================
+  // CLEAR LEADERBOARD
+  // ============================
+  function clearLeaderboard() {
+    if (confirm("Are you sure you want to clear the leaderboard?")) {
+      localStorage.removeItem("ripleyBoard");
+      document.getElementById("board").innerHTML = "";
+      alert("Leaderboard cleared!");
+    }
+  }
+
+
+  // ============================
   // EMAIL LEADERBOARD
   // ============================
   function emailLeaderboard() {
@@ -282,7 +296,7 @@ window.onload = function() {
     let body = board.map(e => `${e.team}: ${e.score}`).join("%0D%0A");
 
     window.location.href =
-      `mailto:rob1ripley@me.comsubject=Ripley Rally Leaderboard&body=${body}`;
+      `mailto:YOUR_EMAIL_HERE?subject=Ripley Rally Leaderboard&body=${body}`;
   }
 
 
@@ -302,6 +316,7 @@ window.onload = function() {
   window.skipBonus = skipBonus;
 
   window.testSound = testSound;
+  window.clearLeaderboard = clearLeaderboard;
 
   // Start countdown
   startRallyCountdown();
