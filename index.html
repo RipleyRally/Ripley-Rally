@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Ripley Rally Quiz</title>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
 
@@ -18,7 +18,6 @@
   <p>Unscramble this anagram to reveal today’s destination:</p>
   <p><b>WALTON ON THEM SA</b></p>
 
-  <!-- 🔊 SOUND TEST BUTTON -->
   <button onclick="testSound()">🔊 Test Sound</button>
   <br><br>
 
@@ -48,9 +47,10 @@
 </div>
 
 <!-- LEADERBOARD -->
-<div id="leaderboard" class="hidden">
+<div id="leaderboard" class="hidden" style="padding:20px;">
   <h2>🏆 Leaderboard 🏆</h2>
-  <ul id="board"></ul>
+
+  <ul id="board" style="margin-bottom:20px;"></ul>
 
   <button onclick="emailLeaderboard()">Email Leaderboard to Organiser</button>
   <button onclick="clearLeaderboard()">Clear Leaderboard</button>
@@ -63,7 +63,7 @@
 <audio id="leaderboardMusic" src="leaderboard.mp3"></audio>
 <audio id="deadlineMusic" src="deadline.mp3"></audio>
 
-<script src="questions.js?v=6"></script>
+<script src="questions.js?v=7"></script>
 
 <script>
 window.onload = function() {
@@ -260,19 +260,32 @@ window.onload = function() {
     alert("Score saved!");
   }
 
+  // ============================
+  // SAFE LEADERBOARD DISPLAY
+  // ============================
   function showLeaderboard(){
     pause("finaleMusic");
     play("leaderboardMusic");
 
     document.getElementById("results").classList.add("hidden");
     document.getElementById("leaderboard").classList.remove("hidden");
+
     let board = JSON.parse(localStorage.getItem("ripleyBoard") || "[]");
     board.sort((a,b)=>b.score - a.score);
+
+    // Escape HTML to prevent broken rendering
+    function escapeHTML(str) {
+      return str.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+    }
+
     document.getElementById("board").innerHTML = board
-      .map(e => `<li>${e.team}: ${e.score}</li>`)
+      .map(e => `<li>${escapeHTML(e.team)}: ${e.score}</li>`)
       .join("");
   }
-
 
   // ============================
   // CLEAR LEADERBOARD
@@ -284,7 +297,6 @@ window.onload = function() {
       alert("Leaderboard cleared!");
     }
   }
-
 
   // ============================
   // EMAIL LEADERBOARD
@@ -299,9 +311,8 @@ window.onload = function() {
       `mailto:YOUR_EMAIL_HERE?subject=Ripley Rally Leaderboard&body=${body}`;
   }
 
-
   // ============================
-  // EXPOSE FUNCTIONS GLOBALLY
+  // EXPOSE FUNCTIONS
   // ============================
   window.checkAnagram = checkAnagram;
   window.startQuiz = startQuiz;
